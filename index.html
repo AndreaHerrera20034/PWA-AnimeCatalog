@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#317EFB">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="manifest" href="manifest.json">
+    <!-- <link rel="icon" href="" type="image/x-icon"> -->
+    <title>Prueba de PWA en HTML</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Catálogo de Series Anime</h1>
+        <form id="anime-form">
+            <input type="text" id="title-input" placeholder="Título" required>
+            <input type="text" id="genre-input" placeholder="Género" required>
+            <input type="text" id="episodes-input" placeholder="Cantidad de episodios" required>
+            <input type="url" id="image-input" placeholder="URL de la imagen del anime" required>
+            <button type="submit">Añadir Serie</button>
+        </form>
+        <!-- Lista donde se mostraran las series agregadas -->
+        <h2>Series</h2>
+        <div id="anime-grid"></div>
+    </div>
+
+    <script src="js//app.js"></script>
+</body>
+
+</html>
