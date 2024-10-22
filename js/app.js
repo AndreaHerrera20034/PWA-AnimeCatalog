@@ -58,7 +58,37 @@ fetchSeries();
 // Seleccionar el formulario del DOM
 const animeForm = document.getElementById('anime-form');
 
-// Función para añadir una nueva serie al catálogo
+let editMode = false; // Para indicar si estamos editando
+let editAnimeId = null; // ID del anime que estamos editando
+
+// Función para traer los datos de un anime y rellenar el formulario
+function editAnime(id) {
+    const apiUrl = `http://localhost:4000/api/animes/${id}`; // Asegúrate de que esta ruta existe en tu backend
+
+    fetch(apiUrl)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al obtener el anime');
+            }
+            return response.json();
+        })
+        .then(anime => {
+            // Rellenar el formulario con los datos del anime a editar
+            document.getElementById('title-input').value = anime.title;
+            document.getElementById('genre-input').value = anime.genre;
+            document.getElementById('episodes-input').value = anime.episodes;
+            document.getElementById('image-input').value = anime.image;
+
+            // Cambiar a modo edición
+            editMode = true;
+            editAnimeId = anime._id;
+        })
+        .catch(error => {
+            console.error('Error al cargar el anime para editar:', error);
+        });
+}
+
+// Modificar la función de submit del formulario para manejar tanto creación como edición
 animeForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
@@ -68,33 +98,60 @@ animeForm.addEventListener('submit', (e) => {
     const episodes = document.getElementById('episodes-input').value;
     const image = document.getElementById('image-input').value;
 
-    // Crear un objeto con los datos del nuevo anime
-    const newAnime = { title, genre, episodes, image };
+    // Crear un objeto con los datos del anime
+    const animeData = { title, genre, episodes, image };
 
-    // URL de la API para añadir una nueva serie
-    const apiUrl = 'http://localhost:4000/api/post/crear';
+    if (editMode) {
+        // Si estamos en modo edición, actualizamos el anime
+        const apiUrl = `http://localhost:4000/api/update/animes/${editAnimeId}`; // Ruta para actualizar un anime
 
-    // Enviar la solicitud POST a la API
-    fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newAnime)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Error al añadir la serie');
-        }
-        return response.json(); // Convertir la respuesta en JSON
-    })
-    .then(data => {
-        console.log('Serie añadida:', data);
-        fetchSeries(); // Refrescar la lista de series después de añadir
-    })
-    .catch(error => {
-        console.error('Error al añadir la serie:', error);
-    });
+        fetch(apiUrl, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(animeData)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al actualizar el anime');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Anime actualizado:', data);
+            fetchSeries(); // Refrescar la lista de series después de editar
+            editMode = false; // Volver al modo de añadir
+            editAnimeId = null; // Limpiar el ID
+        })
+        .catch(error => {
+            console.error('Error al actualizar el anime:', error);
+        });
+    } else {
+        // Si no estamos en modo edición, añadimos un nuevo anime
+        const apiUrl = 'http://localhost:4000/api/post/crear'; // Ruta para crear un nuevo anime
+
+        fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(animeData)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al añadir la serie');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Serie añadida:', data);
+            fetchSeries(); // Refrescar la lista de series después de añadir
+        })
+        .catch(error => {
+            console.error('Error al añadir la serie:', error);
+        });
+    }
 
     // Limpiar el formulario
     animeForm.reset();
