@@ -23,14 +23,14 @@ function fetchSeries() {
 
 // Traer los animes en cards
 function displayAnimeCatalog(animeData) {
-    console.log('Datos recibidos:', animeData); // Verificar los datos recibidos
+    // console.log('Datos recibidos:', animeData); // Verificar los datos recibidos
 
     animeGrid.innerHTML = ''; // Limpiar la grilla actual
 
     // Iterar sobre cada anime en el arreglo recibido
     animeData.forEach(animeObj => {
         // En este caso, el objeto completo es animeObj
-        console.log('Anime procesado:', animeObj); // Verificar el acceso a los datos correctos
+        // console.log('Anime procesado:', animeObj); // Verificar el acceso a los datos correctos
 
         const card = document.createElement('div');
         card.classList.add('anime-card');
@@ -119,7 +119,7 @@ animeForm.addEventListener('submit', (e) => {
             return response.json();
         })
         .then(data => {
-            console.log('Anime actualizado:', data);
+            // console.log('Anime actualizado:', data);
             fetchSeries(); // Refrescar la lista de series después de editar
             editMode = false; // Volver al modo de añadir
             editAnimeId = null; // Limpiar el ID
@@ -185,3 +185,20 @@ function deleteAnime(id) {
         console.error('Error al eliminar el anime:', error);
     });
 }
+
+if ('serviceWorker' in navigator && 'SyncManager' in window) {
+    navigator.serviceWorker.register('/service-worker.js')
+    .then(reg => {
+        console.log('Service Worker registrado', reg);
+
+        // Verificar si hay conexión y realizar sincronización
+        if (navigator.onLine) {
+            reg.sync.register('sync-animes');
+        }
+    })
+    .catch(error => {
+        console.error('Error al registrar el Service Worker:', error);
+    });
+}
+
+
