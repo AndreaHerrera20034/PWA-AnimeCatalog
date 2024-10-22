@@ -156,3 +156,32 @@ animeForm.addEventListener('submit', (e) => {
     // Limpiar el formulario
     animeForm.reset();
 });
+
+// Función para eliminar un anime
+function deleteAnime(id) {
+    const apiUrl = `http://localhost:4000/api/delete/anime/${id}`;  // URL de la API para eliminar el anime por su ID
+
+    // Confirmar antes de eliminar
+    const confirmDelete = confirm('¿Estás seguro de que deseas eliminar este anime?');
+    if (!confirmDelete) {
+        return;  // Si el usuario cancela, no hacer nada
+    }
+
+    // Realizar la solicitud DELETE para eliminar el anime
+    fetch(apiUrl, {
+        method: 'DELETE',
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error al eliminar el anime');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Anime eliminado:', data);
+        fetchSeries();  // Refrescar la lista de series después de eliminar
+    })
+    .catch(error => {
+        console.error('Error al eliminar el anime:', error);
+    });
+}
