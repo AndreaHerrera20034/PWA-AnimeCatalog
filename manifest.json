@@ -1,10 +1,11 @@
 {
-    "name": "PWA CRUD App",
-    "short_name": "PWA CRUD",
+    "name": "Anime Tracker",
+    "short_name": "Anime App",
     "start_url": "/index.html",
     "display": "standalone",
     "background_color": "#ffffff",
-    "description": "Aplicación CRUD con soporte offline y sincronización de datos.",
+    "theme_color": "#317EFB",
+    "description": "Una aplicación para agregar y buscar animes",
     "icons": [
       {
         "src": "/images/icon.png",
