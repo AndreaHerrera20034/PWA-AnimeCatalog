@@ -8,8 +8,15 @@
     "description": "Una aplicación para agregar y buscar animes",
     "icons": [
       {
+        "purpose": "maskable",
+        "sizes": "512x512",
         "src": "/images/icon.png",
-        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "purpose": "any",
+        "sizes": "512x512",
+        "src": "/images/icon.png",
         "type": "image/png"
       }
     ]
