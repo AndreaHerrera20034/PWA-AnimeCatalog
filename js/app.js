@@ -1,6 +1,50 @@
 // Seleccionar el contenedor donde se mostrarán las tarjetas
 const animeGrid = document.getElementById('anime-grid');
 
+// Referencias a los botones y secciones
+const addTab = document.getElementById('addTab');
+const searchTab = document.getElementById('searchTab');
+const addSection = document.getElementById('add-section');
+const searchSection = document.getElementById('search-section');
+
+// Función para activar y desactivar secciones
+function switchTab(event) {
+    const isAddTab = event.target.id === 'addTab';
+
+    // Cambiar la clase active de los botones
+    addTab.classList.toggle('active', isAddTab);
+    searchTab.classList.toggle('active', !isAddTab);
+
+    // Mostrar la sección correspondiente
+    addSection.classList.toggle('active', isAddTab);
+    searchSection.classList.toggle('active', !isAddTab);
+}
+
+// Manejar el clic en los botones de navegación
+addTab.addEventListener('click', switchTab);
+searchTab.addEventListener('click', switchTab);
+
+// Función de búsqueda de anime
+document.getElementById('searchButton').addEventListener('click', () => {
+    const query = document.getElementById('searchInput').value;
+    fetchAnimeSearch(query);
+});
+
+// Función para obtener los resultados de la búsqueda
+function fetchAnimeSearch(query) {
+    const apiUrl = `http://localhost:4000/api/search/animes?query=${query}`; // URL de la API para buscar animes
+
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            displayAnimeCatalog(data); // Mostrar los animes encontrados
+        })
+        .catch(error => {
+            console.error('Error al buscar los animes:', error);
+            document.getElementById('anime-grid').innerHTML = '<p>Error al cargar los animes.</p>';
+        });
+}
+
 // Función para obtener las series desde la API
 function fetchSeries() {
     const apiUrl = 'http://localhost:4000/api/animes'; // URL de la API para obtener las series
@@ -77,7 +121,10 @@ function editAnime(id) {
             document.getElementById('title-input').value = anime.title;
             document.getElementById('genre-input').value = anime.genre;
             document.getElementById('episodes-input').value = anime.episodes;
-            document.getElementById('image-input').value = anime.image;
+
+            // Mostrar la imagen actual (en lugar de intentar establecer el valor del input file)
+            const imagePreview = document.getElementById('image-preview');
+            imagePreview.src = anime.image; // Asignar la URL de la imagen a un <img>
 
             // Cambiar a modo edición
             editMode = true;
@@ -199,3 +246,4 @@ if ('serviceWorker' in navigator && 'SyncManager' in window) {
 }
 
 
+fetchAnimeSearch('');

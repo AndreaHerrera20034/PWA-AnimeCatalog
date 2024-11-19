@@ -5,6 +5,35 @@ body {
     background-color: #f0f0f0;
 }
 
+#navbar {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.tab {
+    padding: 10px 20px;
+    background-color: #FF6F61;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.tab.active {
+    background-color: #d9534f;
+}
+
+.section {
+    display: none;
+    padding: 20px;
+    text-align: center;
+}
+
+.section.active {
+    display: block;
+}
+
 .container {
     max-width: 600px;
     margin: 50px auto;
