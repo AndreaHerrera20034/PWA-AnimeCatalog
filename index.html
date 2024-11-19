@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#317EFB">
     <link rel="stylesheet" href="css/style.css">
     <link rel="manifest" href="manifest.json">
-    <!-- <link rel="icon" href="" type="image/x-icon"> -->
+    <link rel="icon" href="images/logo.png" type="image/x-icon">
     <title>Prueba de PWA en HTML</title>
 </head>
 
@@ -18,7 +18,7 @@
             <input type="text" id="title-input" placeholder="Título" required>
             <input type="text" id="genre-input" placeholder="Género" required>
             <input type="text" id="episodes-input" placeholder="Cantidad de episodios" required>
-            <input type="url" id="image-input" placeholder="URL de la imagen del anime" required>
+            <input type="file" id="image-input" name="image" accept="image/*" required>
             <button type="submit">Añadir Serie</button>
         </form>
         <!-- Lista donde se mostraran las series agregadas -->

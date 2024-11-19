@@ -92,25 +92,25 @@ function editAnime(id) {
 animeForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    // Obtener los valores del formulario
-    const title = document.getElementById('title-input').value;
-    const genre = document.getElementById('genre-input').value;
-    const episodes = document.getElementById('episodes-input').value;
-    const image = document.getElementById('image-input').value;
+    // Crear un objeto FormData
+    const formData = new FormData();
+    formData.append('title', document.getElementById('title-input').value);
+    formData.append('genre', document.getElementById('genre-input').value);
+    formData.append('episodes', document.getElementById('episodes-input').value);
 
-    // Crear un objeto con los datos del anime
-    const animeData = { title, genre, episodes, image };
+    // Verificar si se seleccionó una nueva imagen
+    const imageFile = document.getElementById('image-input').files[0];
+    if (imageFile) {
+        formData.append('image', imageFile);
+    }
 
     if (editMode) {
-        // Si estamos en modo edición, actualizamos el anime
-        const apiUrl = `http://localhost:4000/api/update/animes/${editAnimeId}`; // Ruta para actualizar un anime
+        // Si estamos en modo edición
+        const apiUrl = `http://localhost:4000/api/update/animes/${editAnimeId}`;
 
         fetch(apiUrl, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(animeData)
+            body: formData, // Enviar FormData en el cuerpo
         })
         .then(response => {
             if (!response.ok) {
@@ -119,34 +119,31 @@ animeForm.addEventListener('submit', (e) => {
             return response.json();
         })
         .then(data => {
-            // console.log('Anime actualizado:', data);
-            fetchSeries(); // Refrescar la lista de series después de editar
-            editMode = false; // Volver al modo de añadir
+            console.log('Anime actualizado:', data);
+            fetchSeries(); // Refrescar lista
+            editMode = false; // Salir del modo edición
             editAnimeId = null; // Limpiar el ID
         })
         .catch(error => {
             console.error('Error al actualizar el anime:', error);
         });
     } else {
-        // Si no estamos en modo edición, añadimos un nuevo anime
-        const apiUrl = 'http://localhost:4000/api/post/crear'; // Ruta para crear un nuevo anime
+        // Si estamos en modo creación
+        const apiUrl = 'http://localhost:4000/api/post/crear';
 
         fetch(apiUrl, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(animeData)
+            body: formData, // Enviar FormData en el cuerpo
         })
         .then(response => {
             if (!response.ok) {
-                throw new Error('Error al añadir la serie');
+                throw new Error('Error al añadir el anime');
             }
             return response.json();
         })
         .then(data => {
             console.log('Serie añadida:', data);
-            fetchSeries(); // Refrescar la lista de series después de añadir
+            fetchSeries(); // Refrescar lista
         })
         .catch(error => {
             console.error('Error al añadir la serie:', error);
